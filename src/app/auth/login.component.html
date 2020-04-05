@@ -1,0 +1,40 @@
+<div fxFill fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.5rem" class="mat-typography">
+  <div>
+    <h1 fxLayoutAlign="center">Where is Jeff</h1>
+    <p fxLayoutAlign="center">
+      <img class="logo" src="assets/location-logo.png" alt="angular logo" />
+    </p>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2rem">
+      <h4 class="version">v{{ version }}</h4>
+    </div>
+  </div>
+  <div class="login-container" fxLayout="row" fxLayoutAlign="center">
+    <mat-card fxFlex="90%" fxFlex.sm="66%" fxFlex.md="50%" fxFlex.gt-md="33%" class="login-box">
+      <div fxLayout="column" fxLayoutAlign="center center" *ngIf="no_permissions">
+        <p>
+          Signed in as <b>{{ username }}</b
+          >, but you have no permisisons to read.
+        </p>
+        <p>
+          Please contact Jeff and ask for access.
+        </p>
+      </div>
+      <div *ngIf="!no_permissions">
+        <form (ngSubmit)="login()" [formGroup]="loginForm" novalidate>
+          <div class="login-error" [hidden]="!error || isLoading">
+            <div>Failed to Log In<br />{{ error }}</div>
+          </div>
+          <div class="login-fields" fxLayout="column" fxLayoutAlign="center center">
+            <p>
+              Please link your Google account in order to gain access.
+            </p>
+            <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+              <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+              <span>Sign In With Google</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+</div>

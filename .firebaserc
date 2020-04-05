@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "jheidel-aprs": {
+      "hosting": {
+        "jheidel-aprs-app": [
+          "jheidel-aprs"
+        ]
+      }
+    }
+  }
+}
