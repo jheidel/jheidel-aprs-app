@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
 import { Logger, untilDestroyed } from '@core';
@@ -20,6 +21,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   error: string | undefined;
   loginForm!: FormGroup;
   isLoading = false;
+  no_permissions = false;
+  username: string;
 
   constructor(
     private router: Router,
@@ -29,6 +32,18 @@ export class LoginComponent implements OnInit, OnDestroy {
     private credentialsService: CredentialsService
   ) {
     this.createForm();
+
+    this.credentialsService.credentials.subscribe((creds) => {
+      if (!creds) {
+        log.debug('UPDATE user signed out ' + creds);
+        this.no_permissions = false;
+        this.username = '[not signed in]';
+        return;
+      }
+      log.debug('UPDATE user signed in');
+      this.no_permissions = !creds.settings || !creds.settings.can_read;
+      this.username = creds.username;
+    });
   }
 
   ngOnInit() {}
@@ -57,18 +72,6 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.error = error;
         }
       );
-  }
-
-  public get no_permissions(): boolean {
-    const creds = this.credentialsService.cachedCredentials;
-    if (!creds) {
-      return false; // Unknown, have to let them log in first.
-    }
-    return !creds.settings || !creds.settings.can_read;
-  }
-  public get username(): string {
-    const creds = this.credentialsService.cachedCredentials;
-    return !!creds ? creds.username : '[not signed in]';
   }
 
   private createForm() {

@@ -37,7 +37,7 @@ export class CredentialsService {
   }
 
   isAuthenticated(): Observable<boolean> {
-    return this.credentials.pipe(
+    return this.credentials.pipe(take(1)).pipe(
       map((creds) => {
         return !!creds;
       })
@@ -45,7 +45,7 @@ export class CredentialsService {
   }
 
   isReadAllowed(): Observable<boolean> {
-    return this.credentials.pipe(
+    return this.credentials.pipe(take(1)).pipe(
       map((creds) => {
         return !!creds && !!creds.settings && creds.settings.can_read;
       })
@@ -53,7 +53,7 @@ export class CredentialsService {
   }
 
   isWriteAllowed(): Observable<boolean> {
-    return this.credentials.pipe(
+    return this.credentials.pipe(take(1)).pipe(
       map((creds) => {
         return !!creds && !!creds.settings && creds.settings.can_write;
       })
@@ -66,7 +66,6 @@ export class CredentialsService {
   get credentials(): Observable<Credentials | null> {
     log.debug('Checking credentials...');
     return this.firebaseAuth.user
-      .pipe(take(1))
       .pipe(
         catchError((err) => {
           log.debug('Error looking up user credentials: ' + err);
