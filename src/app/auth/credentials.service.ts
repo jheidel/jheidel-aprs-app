@@ -78,8 +78,9 @@ export class CredentialsService {
             return of(null);
           }
           log.debug('Got user ' + JSON.stringify(u));
+          log.debug('Checking permissions for ' + u.email);
           return this.firestore
-            .doc<UserSettings>('user_permissions/' + u.uid)
+            .doc<UserSettings>('user_permissions/' + u.email)
             .valueChanges()
             .pipe(take(1))
             .pipe(

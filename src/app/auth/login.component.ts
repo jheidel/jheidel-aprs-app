@@ -35,14 +35,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.credentialsService.credentials.subscribe((creds) => {
       if (!creds) {
-        log.debug('UPDATE user signed out ' + creds);
         this.no_permissions = false;
         this.username = '[not signed in]';
         return;
       }
-      log.debug('UPDATE user signed in');
       this.no_permissions = !creds.settings || !creds.settings.can_read;
       this.username = creds.username;
+      if (!this.no_permissions) {
+        log.info('Already good to go, have permissions, redirecting.');
+        this.redirect();
+      }
     });
   }
 
@@ -50,10 +52,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
+  redirect() {
+    this.router.navigate([this.route.snapshot.queryParams.redirect || '/'], { replaceUrl: true });
+  }
+
   login() {
     this.isLoading = true;
     const login$ = this.authenticationService.login(this.loginForm.value);
-    log.debug('LOGIN');
     login$
       .pipe(
         finalize(() => {
@@ -65,7 +70,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(
         (username) => {
           log.debug(`${username} successfully logged in`);
-          this.router.navigate([this.route.snapshot.queryParams.redirect || '/'], { replaceUrl: true });
+          this.redirect();
         },
         (error) => {
           log.debug(`Login error: ${error}`);

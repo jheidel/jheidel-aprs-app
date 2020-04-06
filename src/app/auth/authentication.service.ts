@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, of, from } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { auth } from 'firebase/app';
 
 import { Credentials } from './credentials.service';
@@ -39,7 +40,10 @@ export class AuthenticationService {
    * @return True if the user was logged out successfully.
    */
   logout(): Observable<boolean> {
-    this.firebaseAuth.signOut();
-    return of(true);
+    return from(this.firebaseAuth.signOut()).pipe(
+      map((result) => {
+        return true;
+      })
+    );
   }
 }
