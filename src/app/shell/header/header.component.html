@@ -5,9 +5,14 @@
     </button>
     <span class="title">{{ title }}</span>
   </div>
-  <div fxHide.lt-md>
-    <a class="brand" href="https://where.jeffheidel.com">Where is Jeff</a>
-    <button mat-button routerLink="/home" routerLinkActive="active">
+  <div fxHide.lt-md fxLayout="row">
+    <a class="brand" href="/" fxLayoutAlign="center center">
+      <img class="logo" src="assets/location-logo.png" width="48" height="48" />
+      <span>
+        Where is Jeff
+      </span>
+    </a>
+    <button mat-button routerLink="/" routerLinkActive="active">
       <mat-icon>home</mat-icon>
       <span>Home</span>
     </button>

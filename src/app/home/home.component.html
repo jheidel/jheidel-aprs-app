@@ -11,4 +11,10 @@
       </mat-card-subtitle>
     </mat-card-content>
   </mat-card>
+  <mat-card *ngIf="text">
+    <mat-card-content>
+      <mat-card-title>Latest Itinerary</mat-card-title>
+      <div>{{ text }}</div>
+    </mat-card-content>
+  </mat-card>
 </div>
