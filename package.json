@@ -30,6 +30,7 @@
     "firebase": "^7.13.2",
     "material-design-icons-iconfont": "^5.0.1",
     "moment": "^2.24.0",
+    "ngx-markdown": "^9.0.0",
     "rxjs": "^6.5.4",
     "tslib": "^1.10.1",
     "zone.js": "^0.10.3"

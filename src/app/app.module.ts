@@ -13,9 +13,12 @@ import { ShellModule } from './shell/shell.module';
 import { AboutModule } from './about/about.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+
+import { MarkdownModule } from 'ngx-markdown';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDjvyMSY_bfSNInv63P6vtJA4f3px1SYWE',
@@ -30,11 +33,12 @@ const firebaseConfig = {
 @NgModule({
   imports: [
     BrowserModule,
+    FormsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    FormsModule,
     HttpClientModule,
+    MarkdownModule.forRoot(),
     BrowserAnimationsModule,
     MaterialModule,
     CoreModule,

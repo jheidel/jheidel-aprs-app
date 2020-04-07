@@ -9,8 +9,18 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { QuoteService } from './quote.service';
 
+import { MarkdownModule } from 'ngx-markdown';
+
 @NgModule({
-  imports: [CommonModule, CoreModule, SharedModule, FlexLayoutModule, MaterialModule, HomeRoutingModule],
+  imports: [
+    CommonModule,
+    CoreModule,
+    SharedModule,
+    FlexLayoutModule,
+    MaterialModule,
+    HomeRoutingModule,
+    MarkdownModule.forChild(),
+  ],
   declarations: [HomeComponent],
 })
 export class HomeModule {}

@@ -9,12 +9,13 @@
         <app-loader [isLoading]="isLoading" size="1.5"></app-loader>
         <q [hidden]="isLoading">{{ quote }}</q>
       </mat-card-subtitle>
-    </mat-card-content>
-  </mat-card>
-  <mat-card *ngIf="text">
-    <mat-card-content>
-      <mat-card-title>Latest Itinerary</mat-card-title>
-      <div>{{ text }}</div>
+
+      <div *ngIf="text">
+        <h2>Latest Itinerary</h2>
+        <div>
+          <markdown [data]="text"></markdown>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>
