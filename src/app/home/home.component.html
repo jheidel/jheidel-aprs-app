@@ -1,19 +1,76 @@
 <div class="container">
   <mat-card>
-    <p>
-      <img class="logo" src="assets/ngx-rocket-logo.png" alt="angular logo" />
-    </p>
     <mat-card-content>
-      <mat-card-title>Hello World!</mat-card-title>
+      <mat-card-title>Itinerary</mat-card-title>
       <mat-card-subtitle>
         <app-loader [isLoading]="isLoading" size="1.5"></app-loader>
-        <q [hidden]="isLoading">{{ quote }}</q>
-      </mat-card-subtitle>
-
-      <div *ngIf="text">
-        <h2>Latest Itinerary</h2>
         <div>
-          <markdown [data]="text"></markdown>
+          Last updated
+          {{ formatAge(itin.created_at) }} ago ({{ formatTime(itin.created_at) }})
+        </div>
+      </mat-card-subtitle>
+      <div *ngIf="itin.text">
+        <markdown [data]="itin.text"></markdown>
+        <div [hidden]="!canWrite">
+          <h4>Editor</h4>
+          <textarea cols="80" rows="10" #editor>{{ itin.text }}</textarea>
+          <div>
+            <button matt-button (click)="onSaveEditor()">Save</button>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-card-title>Position Reports</mat-card-title>
+      <mat-card-subtitle>
+        These reports are picked up from my HAM radio. This section updates in real time.
+      </mat-card-subtitle>
+      <div class="packets">
+        <div *ngFor="let p of packets">
+          <div>
+            {{ formatTime(p.received_at) }}
+            <i>({{ formatAge(p.received_at) }} ago)</i>
+          </div>
+          <div [hidden]="!p.message" class="message">
+            {{ p.message }}
+          </div>
+          <div [hidden]="!p.has_position">
+            GPS: {{ formatGps(p.position) }}
+            <a
+              href="https://www.google.com/maps/search/{{ p.position.latitude }},{{
+                p.position.longitude
+              }}?basemap=terrain"
+              >(Map)</a
+            >
+          </div>
+          <div>
+            Received from <b>{{ p.src }}</b>
+            <a href="https://aprs.fi/#!mt=terrain&z=15&call=a%2F{{ p.src }}">(Track)</a>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-card-title>APRS Gateway Status</mat-card-title>
+      <mat-card-subtitle>
+        Packets from the HAM radio APRS network are delivered by proxy servers. The status of those proxies is presented
+        here. If everything is red, it may indicate a problem receiving data.
+      </mat-card-subtitle>
+      <div class="gateways">
+        <div *ngFor="let g of gateways" [class]="toHealthStyle(g.healthy_at)">
+          <div>
+            Server <b>{{ g.hostname }}</b> last check-in <b>{{ formatTime(g.healthy_at) }}</b>
+          </div>
+          <div>
+            (last restart <b>{{ formatTime(g.started_at) }}</b
+            >)
+          </div>
         </div>
       </div>
     </mat-card-content>

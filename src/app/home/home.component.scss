@@ -1,14 +1,44 @@
 .container {
   text-align: center;
-  padding: 1em;
+  display: flex;
+  flex-direction: column;
 }
 
-.logo {
-  width: 150px;
-  margin: 0 auto;
+.container > * {
+  margin: 1em;
 }
 
-q {
-  font-style: italic;
-  quotes: "« " " »";
+.healthy {
+  background-color: lightgreen;
+}
+.unhealthy {
+  background-color: lightpink;
+}
+
+.gateways > div {
+  margin: 0.2em;
+  padding: 0.2em;
+}
+
+.gateways {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.packets {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.packets > div {
+  margin: 0.2em;
+  padding: 0.2em;
+  background-color: #eee;
+  border: solid;
+  border-color: black;
+  border-width: 1px;
+}
+
+.message {
+  font-size: 1.3em;
 }
