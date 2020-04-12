@@ -39,6 +39,9 @@ export class HomeComponent implements OnInit {
   itin: Itinerary | undefined;
   gateways: Array<Gateway> | undefined;
   packets: Array<Packet> | undefined;
+  now: firestore.Timestamp = firestore.Timestamp.now();
+
+  private intervalID: number | undefined;
 
   constructor(private fs: AngularFirestore, private credentialsService: CredentialsService) {}
 
@@ -50,6 +53,7 @@ export class HomeComponent implements OnInit {
       .valueChanges()
       .subscribe((v) => {
         this.isLoading = false;
+        this.now = firestore.Timestamp.now();
         this.itin = !!v ? v[0] : undefined;
       });
 
@@ -57,6 +61,7 @@ export class HomeComponent implements OnInit {
       .collection<Gateway>('aprs_gateways', (ref) => ref.orderBy('healthy_at', 'desc'))
       .valueChanges()
       .subscribe((gateways) => {
+        this.now = firestore.Timestamp.now();
         this.gateways = gateways;
       });
 
@@ -64,20 +69,28 @@ export class HomeComponent implements OnInit {
       .collection<Packet>('aprs_packets', (ref) => ref.orderBy('received_at', 'desc').limit(15))
       .valueChanges()
       .subscribe((packets) => {
+        this.now = firestore.Timestamp.now();
         this.packets = packets;
       });
 
     this.credentialsService.credentials.subscribe((creds) => {
       this.canWrite = !!creds.settings && creds.settings.can_write;
     });
+
+    if (this.intervalID) {
+      window.clearInterval(this.intervalID);
+    }
+    this.intervalID = window.setInterval(() => {
+      this.now = firestore.Timestamp.now();
+    }, 5000);
   }
 
   formatTime(ts: firestore.Timestamp): string {
     return moment(ts.toDate()).toString();
   }
 
-  formatAge(ts: firestore.Timestamp): string {
-    return moment.duration(moment().diff(moment(ts.toDate()))).humanize();
+  formatAge(now: firestore.Timestamp, ts: firestore.Timestamp): string {
+    return moment.duration(moment(now.toDate()).diff(moment(ts.toDate()))).humanize();
   }
 
   toHealthStyle(ts: firestore.Timestamp): string {

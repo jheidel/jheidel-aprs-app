@@ -4,13 +4,15 @@
       <mat-card-title>Itinerary</mat-card-title>
       <mat-card-subtitle>
         <app-loader [isLoading]="isLoading" size="1.5"></app-loader>
-        <div>
+        <div *ngIf="itin">
           Last updated
-          {{ formatAge(itin.created_at) }} ago ({{ formatTime(itin.created_at) }})
+          {{ formatAge(now, itin.created_at) }} ago ({{ formatTime(itin.created_at) }})
         </div>
       </mat-card-subtitle>
-      <div *ngIf="itin.text">
-        <markdown [data]="itin.text"></markdown>
+      <div *ngIf="itin">
+        <div class="itinerary">
+          <markdown [data]="itin.text"></markdown>
+        </div>
         <div [hidden]="!canWrite">
           <h4>Editor</h4>
           <textarea cols="80" rows="10" #editor>{{ itin.text }}</textarea>
@@ -32,7 +34,7 @@
         <div *ngFor="let p of packets">
           <div>
             {{ formatTime(p.received_at) }}
-            <i>({{ formatAge(p.received_at) }} ago)</i>
+            <i>({{ formatAge(now, p.received_at) }} ago)</i>
           </div>
           <div [hidden]="!p.message" class="message">
             {{ p.message }}
