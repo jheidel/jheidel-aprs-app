@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
-import { firestore } from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 import * as moment from 'moment';
 import { CredentialsService, Credentials } from '../auth/credentials.service';
 
@@ -8,20 +9,20 @@ import { AngularFirestore } from '@angular/fire/firestore';
 
 interface Itinerary {
   text: string;
-  created_at: firestore.Timestamp;
+  created_at: firebase.firestore.Timestamp;
 }
 
 interface Gateway {
   hostname: string;
-  started_at: firestore.Timestamp;
-  healthy_at: firestore.Timestamp;
+  started_at: firebase.firestore.Timestamp;
+  healthy_at: firebase.firestore.Timestamp;
 }
 
 interface Packet {
-  received_at: firestore.Timestamp;
+  received_at: firebase.firestore.Timestamp;
   message: string;
   has_position: boolean;
-  position: firestore.GeoPoint;
+  position: firebase.firestore.GeoPoint;
   src: string;
 }
 
@@ -39,7 +40,7 @@ export class HomeComponent implements OnInit {
   itin: Itinerary | undefined;
   gateways: Array<Gateway> | undefined;
   packets: Array<Packet> | undefined;
-  now: firestore.Timestamp = firestore.Timestamp.now();
+  now: firebase.firestore.Timestamp = firebase.firestore.Timestamp.now();
 
   private intervalID: number | undefined;
 
@@ -53,7 +54,7 @@ export class HomeComponent implements OnInit {
       .valueChanges()
       .subscribe((v) => {
         this.isLoading = false;
-        this.now = firestore.Timestamp.now();
+        this.now = firebase.firestore.Timestamp.now();
         this.itin = !!v ? v[0] : undefined;
       });
 
@@ -61,7 +62,7 @@ export class HomeComponent implements OnInit {
       .collection<Gateway>('aprs_gateways', (ref) => ref.orderBy('healthy_at', 'desc'))
       .valueChanges()
       .subscribe((gateways) => {
-        this.now = firestore.Timestamp.now();
+        this.now = firebase.firestore.Timestamp.now();
         this.gateways = gateways;
       });
 
@@ -69,7 +70,7 @@ export class HomeComponent implements OnInit {
       .collection<Packet>('aprs_packets', (ref) => ref.orderBy('received_at', 'desc').limit(15))
       .valueChanges()
       .subscribe((packets) => {
-        this.now = firestore.Timestamp.now();
+        this.now = firebase.firestore.Timestamp.now();
         this.packets = packets;
       });
 
@@ -81,23 +82,26 @@ export class HomeComponent implements OnInit {
       window.clearInterval(this.intervalID);
     }
     this.intervalID = window.setInterval(() => {
-      this.now = firestore.Timestamp.now();
+      this.now = firebase.firestore.Timestamp.now();
     }, 5000);
   }
 
-  formatTime(ts: firestore.Timestamp): string {
+  formatTime(ts: firebase.firestore.Timestamp): string {
     return moment(ts.toDate()).toString();
   }
 
-  formatAge(now: firestore.Timestamp, ts: firestore.Timestamp): string {
+  formatAge(now: firebase.firestore.Timestamp, ts: firebase.firestore.Timestamp): string {
     return moment.duration(moment(now.toDate()).diff(moment(ts.toDate()))).humanize();
   }
 
-  toHealthStyle(ts: firestore.Timestamp): string {
+  toHealthStyle(ts: firebase.firestore.Timestamp): string {
     return moment.duration(moment().diff(moment(ts.toDate()))).asSeconds() < 90 ? 'healthy' : 'unhealthy';
   }
 
-  formatGps(p: firestore.GeoPoint): string {
+  formatGps(p: firebase.firestore.GeoPoint): string {
+    if (!p) {
+      return 'unknown';
+    }
     let ns = 'N';
     let lat = p.latitude;
     if (lat < 0) {
@@ -118,7 +122,7 @@ export class HomeComponent implements OnInit {
   onSaveEditor() {
     const body = this.editor.nativeElement.value;
     this.fs.collection('itineraries').add({
-      created_at: firestore.Timestamp.now(),
+      created_at: firebase.firestore.Timestamp.now(),
       text: body,
     });
   }

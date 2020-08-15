@@ -39,7 +39,7 @@
           <div [hidden]="!p.message" class="message">
             {{ p.message }}
           </div>
-          <div [hidden]="!p.has_position">
+          <div *ngIf="p.has_position && p.position !== undefined">
             GPS: {{ formatGps(p.position) }}
             <span>(</span>
             <a href="https://maps.google.com/maps?t=k&q=loc:{{ p.position.latitude }},{{ p.position.longitude }}"
