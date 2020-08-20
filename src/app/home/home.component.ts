@@ -26,6 +26,10 @@ interface Packet {
   src: string;
 }
 
+interface Secrets {
+  garmin: string;
+}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -40,6 +44,7 @@ export class HomeComponent implements OnInit {
   itin: Itinerary | undefined;
   gateways: Array<Gateway> | undefined;
   packets: Array<Packet> | undefined;
+  secrets: Secrets | undefined;
   now: firebase.firestore.Timestamp = firebase.firestore.Timestamp.now();
 
   private intervalID: number | undefined;
@@ -72,6 +77,14 @@ export class HomeComponent implements OnInit {
       .subscribe((packets) => {
         this.now = firebase.firestore.Timestamp.now();
         this.packets = packets;
+      });
+
+    this.fs
+      .collection('environment')
+      .doc('secrets')
+      .valueChanges()
+      .subscribe((doc) => {
+        this.secrets = doc;
       });
 
     this.credentialsService.credentials.subscribe((creds) => {

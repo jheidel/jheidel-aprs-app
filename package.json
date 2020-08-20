@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "build": "npm run env -s && ng build --prod",
-    "start": "npm run env -s && ng serve --proxy-config proxy.conf.js --host 192.168.1.102",
+    "start": "npm run env -s && ng serve --host 192.168.1.102",
     "deploy": "npm run env -s && ng deploy",
     "lint": "ng lint && stylelint \"src/**/*.scss\" --syntax scss && htmlhint \"src\" --config .htmlhintrc",
     "env": "ngx-scripts env npm_package_version",

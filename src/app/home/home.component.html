@@ -26,7 +26,7 @@
 
   <mat-card>
     <mat-card-content>
-      <mat-card-title>Position Reports</mat-card-title>
+      <mat-card-title>Radio: Position Reports</mat-card-title>
       <mat-card-subtitle>
         These reports are picked up from my HAM radio. This section updates in real time.
       </mat-card-subtitle>
@@ -55,12 +55,15 @@
           </div>
         </div>
       </div>
+      <div *ngIf="!packets || !packets.length" class="empty">
+        No radio packets received yet.
+      </div>
     </mat-card-content>
   </mat-card>
 
   <mat-card>
     <mat-card-content>
-      <mat-card-title>APRS Gateway Status</mat-card-title>
+      <mat-card-title>Radio: Gateway Status</mat-card-title>
       <mat-card-subtitle>
         Packets from the HAM radio APRS network are delivered by proxy servers. The status of those proxies is presented
         here. If everything is red, it may indicate a problem receiving data.
@@ -76,6 +79,41 @@
           </div>
         </div>
       </div>
+      <div *ngIf="!gateways || !gateways.length" class="empty">
+        No gateways are available.
+      </div>
     </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-card-title>Satellite: Garmin InReach Portal</mat-card-title>
+      <mat-card-subtitle>
+        <div>
+          My InReach satellite messenger uploads data to the Garmin MapShare portal below.
+        </div>
+        <div>
+          Please note that sending messages here costs money ($0.50 per message, $0.10 per location update).
+        </div>
+        <p></p>
+        <div *ngIf="secrets" class="large">
+          Enter password <b>{{ secrets.garmin }}</b> below to access.
+        </div>
+      </mat-card-subtitle>
+    </mat-card-content>
+    <iframe
+      src="https://share.garmin.com/jheidel"
+      frameborder="0"
+      marginwidth="0"
+      marginheight="0"
+      width="810"
+      height="760"
+    ></iframe>
+    <div>
+      View in a separate window at
+      <a href="https://share.garmin.com/jheidel" target="_blank">
+        https://share.garmin.com/jheidel
+      </a>
+    </div>
   </mat-card>
 </div>
