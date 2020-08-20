@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { Shell } from '@app/shell/shell.service';
 
-const routes: Routes = [Shell.childRoutes([{ path: '', component: HomeComponent, data: { title: 'Home' } }])];
+const routes: Routes = [Shell.childRoutes([{ path: '', component: HomeComponent, data: { title: 'Track' } }])];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
