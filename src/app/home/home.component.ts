@@ -81,7 +81,7 @@ export class HomeComponent implements OnInit {
 
     this.fs
       .collection('environment')
-      .doc('secrets')
+      .doc<Secrets>('secrets')
       .valueChanges()
       .subscribe((doc) => {
         this.secrets = doc;

@@ -93,26 +93,17 @@
           My InReach satellite messenger uploads data to the Garmin MapShare portal below.
         </div>
         <div>
-          Please note that sending messages here costs money ($0.50 per message, $0.10 per location update).
+          Please note that sending messages costs money ($0.50 per message, $0.10 per location update).
         </div>
         <p></p>
         <div *ngIf="secrets" class="large">
-          Enter password <b>{{ secrets.garmin }}</b> below to access.
+          Enter password <b>{{ secrets.garmin }}</b> to access.
         </div>
       </mat-card-subtitle>
     </mat-card-content>
-    <iframe
-      src="https://share.garmin.com/jheidel"
-      frameborder="0"
-      marginwidth="0"
-      marginheight="0"
-      width="810"
-      height="760"
-    ></iframe>
-    <div>
-      View in a separate window at
+    <div class="large">
       <a href="https://share.garmin.com/jheidel" target="_blank">
-        https://share.garmin.com/jheidel
+        Open Garmin MapShare Portal
       </a>
     </div>
   </mat-card>
