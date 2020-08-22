@@ -49,8 +49,8 @@
             <a href="https://earth.google.com/web/search/{{ p.position.latitude }},{{ p.position.longitude }}">Earth</a>
             <span>)</span>
           </div>
-          <div>
-            Received from <b>{{ p.src }}</b>
+          <div *ngIf="p.aprs !== undefined">
+            Received from <b>{{ p.aprs.src }}</b>
             <a href="https://aprs.fi/#!mt=terrain&z=15&call=a%2F{{ p.src }}">(Track)</a>
           </div>
         </div>
@@ -74,8 +74,8 @@
             Server <b>{{ g.hostname }}</b> last check-in <b>{{ formatTime(g.healthy_at) }}</b>
           </div>
           <div>
-            (last restart <b>{{ formatTime(g.started_at) }}</b
-            >)
+            Build <b>{{ g.build_label }}</b
+            >, Last Restart <b>{{ formatTime(g.started_at) }}</b>
           </div>
         </div>
       </div>
