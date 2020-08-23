@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
       });
 
     this.fs
-      .collection<Packet>('aprs_packets', (ref) => ref.orderBy('received_at', 'desc').limit(15))
+      .collection<Packet>('packets', (ref) => ref.orderBy('received_at', 'desc').limit(15))
       .valueChanges()
       .subscribe((packets) => {
         this.now = firebase.firestore.Timestamp.now();
