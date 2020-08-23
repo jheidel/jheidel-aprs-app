@@ -26,9 +26,10 @@
 
   <mat-card>
     <mat-card-content>
-      <mat-card-title>Radio: Position Reports</mat-card-title>
+      <mat-card-title>Received Packets</mat-card-title>
       <mat-card-subtitle>
-        These reports are picked up from my HAM radio. This section updates in real time.
+        These reports are picked up from either my HAM radio (over APRS) or from my InReach satellite communicator. This
+        section updates in real time.
       </mat-card-subtitle>
       <div class="packets">
         <div *ngFor="let p of packets">
@@ -42,16 +43,21 @@
           <div *ngIf="p.has_position && p.position !== undefined">
             GPS: {{ formatGps(p.position) }}
             <span>(</span>
-            <a href="https://maps.google.com/maps?t=k&q=loc:{{ p.position.latitude }},{{ p.position.longitude }}"
+            <a href="https://maps.google.com/maps?t=k&q=loc:{{ p.position?.latitude }},{{ p.position?.longitude }}"
               >Map</a
             >
             <span>,</span>
-            <a href="https://earth.google.com/web/search/{{ p.position.latitude }},{{ p.position.longitude }}">Earth</a>
+            <a href="https://earth.google.com/web/search/{{ p.position?.latitude }},{{ p.position?.longitude }}"
+              >Earth</a
+            >
             <span>)</span>
           </div>
-          <div *ngIf="p.aprs !== undefined">
-            Received from <b>{{ p.aprs.src }}</b>
-            <a href="https://aprs.fi/#!mt=terrain&z=15&call=a%2F{{ p.src }}">(Track)</a>
+          <div *ngIf="!!p.aprs">
+            Received via HAM Radio from <b>{{ p.aprs?.src }}</b>
+            <a href="https://aprs.fi/#!mt=terrain&z=15&call=a%2F{{ p.aprs?.src }}">(Track)</a>
+          </div>
+          <div *ngIf="!!p.email">
+            Received via satellite from <a href="https://share.garmin.com/jheidel" target="_blank">InReach</a>
           </div>
         </div>
       </div>
@@ -63,15 +69,23 @@
 
   <mat-card>
     <mat-card-content>
-      <mat-card-title>Radio: Gateway Status</mat-card-title>
+      <mat-card-title>Gateway Status</mat-card-title>
       <mat-card-subtitle>
-        Packets from the HAM radio APRS network are delivered by proxy servers. The status of those proxies is presented
-        here. If everything is red, it may indicate a problem receiving data.
+        Packets are collected from sources by proxy servers. If everything is red, it may indicate a problem receiving
+        data.
       </mat-card-subtitle>
       <div class="gateways">
         <div *ngFor="let g of gateways" [class]="toHealthStyle(g.healthy_at)">
           <div>
             Server <b>{{ g.hostname }}</b> last check-in <b>{{ formatTime(g.healthy_at) }}</b>
+          </div>
+          <div *ngIf="isHealthy(g.healthy_at)">
+            <div *ngFor="let m of g.modules">
+              <b>{{ m?.name }}</b> module is
+              <span *ngIf="m.ok" class="module module-good">Healthy</span>
+              <span *ngIf="!m.ok" class="module module-bad">Unhealthy</span>
+              <span *ngIf="m.message">: {{ m.message }}</span>
+            </div>
           </div>
           <div>
             Build <b>{{ g.build_label }}</b

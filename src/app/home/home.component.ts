@@ -23,7 +23,6 @@ interface Packet {
   message: string;
   has_position: boolean;
   position: firebase.firestore.GeoPoint;
-  src: string;
 }
 
 interface Secrets {
@@ -64,7 +63,7 @@ export class HomeComponent implements OnInit {
       });
 
     this.fs
-      .collection<Gateway>('aprs_gateways', (ref) => ref.orderBy('healthy_at', 'desc'))
+      .collection<Gateway>('gateways', (ref) => ref.orderBy('healthy_at', 'desc'))
       .valueChanges()
       .subscribe((gateways) => {
         this.now = firebase.firestore.Timestamp.now();
@@ -72,7 +71,7 @@ export class HomeComponent implements OnInit {
       });
 
     this.fs
-      .collection<Packet>('packets', (ref) => ref.orderBy('received_at', 'desc').limit(15))
+      .collection<Packet>('packets', (ref) => ref.orderBy('received_at', 'desc').limit(100))
       .valueChanges()
       .subscribe((packets) => {
         this.now = firebase.firestore.Timestamp.now();
@@ -107,8 +106,12 @@ export class HomeComponent implements OnInit {
     return moment.duration(moment(now.toDate()).diff(moment(ts.toDate()))).humanize();
   }
 
+  isHealthy(ts: firebase.firestore.Timestamp): boolean {
+    return moment.duration(moment().diff(moment(ts.toDate()))).asSeconds() < 90;
+  }
+
   toHealthStyle(ts: firebase.firestore.Timestamp): string {
-    return moment.duration(moment().diff(moment(ts.toDate()))).asSeconds() < 90 ? 'healthy' : 'unhealthy';
+    return this.isHealthy(ts) ? 'healthy' : 'unhealthy';
   }
 
   formatGps(p: firebase.firestore.GeoPoint): string {

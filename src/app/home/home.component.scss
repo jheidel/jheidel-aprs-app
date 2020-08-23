@@ -25,6 +25,19 @@
   flex-direction: column;
 }
 
+.module {
+  padding: 2px;
+  color: white;
+}
+
+.module-good {
+  background-color: green;
+}
+
+.module-bad {
+  background-color: red;
+}
+
 .packets {
   display: inline-flex;
   flex-direction: column;
