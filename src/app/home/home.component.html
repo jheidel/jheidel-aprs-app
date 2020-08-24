@@ -13,6 +13,22 @@
         <div class="itinerary">
           <markdown [data]="itin.text"></markdown>
         </div>
+
+        <p></p>
+
+        <div class="itinerary">
+          <div>
+            My InReach satellite messenger uploads data to the
+            <a href="https://share.garmin.com/jheidel" target="_blank"> Open Garmin MapShare Portal </a>.
+          </div>
+          <div *ngIf="secrets" class="large">
+            Enter password <b>{{ secrets.garmin }}</b> to access.
+          </div>
+          <div>
+            Please note that sending messages costs money ($0.50 per message, $0.10 per location update).
+          </div>
+        </div>
+
         <div [hidden]="!canWrite">
           <h4>Editor</h4>
           <textarea cols="80" rows="10" #editor>{{ itin.text }}</textarea>
@@ -25,44 +41,62 @@
   </mat-card>
 
   <mat-card>
-    <mat-card-content>
-      <mat-card-title>Received Packets</mat-card-title>
-      <mat-card-subtitle>
-        These reports are picked up from either my HAM radio (over APRS) or from my InReach satellite communicator. This
-        section updates in real time.
-      </mat-card-subtitle>
-      <div class="packets">
-        <div *ngFor="let p of packets">
-          <div>
-            {{ formatTime(p.received_at) }}
-            <i>({{ formatAge(now, p.received_at) }} ago)</i>
-          </div>
-          <div [hidden]="!p.message" class="message">
-            {{ p.message }}
-          </div>
-          <div *ngIf="p.has_position && p.position !== undefined">
-            GPS: {{ formatGps(p.position) }}
-            <span>(</span>
-            <a href="https://maps.google.com/maps?t=k&q=loc:{{ p.position?.latitude }},{{ p.position?.longitude }}"
-              >Map</a
-            >
-            <span>,</span>
-            <a href="https://earth.google.com/web/search/{{ p.position?.latitude }},{{ p.position?.longitude }}"
-              >Earth</a
-            >
-            <span>)</span>
-          </div>
-          <div *ngIf="!!p.aprs">
-            Received via HAM Radio from <b>{{ p.aprs?.src }}</b>
-            <a href="https://aprs.fi/#!mt=terrain&z=15&call=a%2F{{ p.aprs?.src }}">(Track)</a>
-          </div>
-          <div *ngIf="!!p.email">
-            Received via satellite from <a href="https://share.garmin.com/jheidel" target="_blank">InReach</a>
-          </div>
+    <mat-card-content class="map-pane">
+      <div class="map">
+        <mat-card-title>Map</mat-card-title>
+        <mat-card-subtitle>
+          All received packets are plotted on this map.
+        </mat-card-subtitle>
+        <div>
+          <div
+            style="height: 800px;"
+            leaflet
+            [leafletOptions]="mapOptions"
+            [leafletLayers]="layers"
+            (leafletMapReady)="onMapReady($event)"
+          ></div>
         </div>
       </div>
-      <div *ngIf="!packets || !packets.length" class="empty">
-        No radio packets received yet.
+
+      <div class="packets">
+        <mat-card-title>Received Packets</mat-card-title>
+        <mat-card-subtitle>
+          These reports are picked up from either my HAM radio (over APRS) or from my InReach satellite communicator.
+          This section updates in real time and shows data from the last <b>5 days</b>.
+        </mat-card-subtitle>
+        <div class="packets">
+          <div *ngFor="let p of packets">
+            <div>
+              {{ formatTime(p.received_at) }}
+              <i>({{ formatAge(now, p.received_at) }} ago)</i>
+            </div>
+            <div [hidden]="!p.message" class="message">
+              {{ p.message }}
+            </div>
+            <div *ngIf="p.has_position && p.position !== undefined">
+              GPS: {{ formatGps(p.position) }}
+              <span>(</span>
+              <a href="https://maps.google.com/maps?t=k&q=loc:{{ p.position?.latitude }},{{ p.position?.longitude }}"
+                >Google Map</a
+              >
+              <span>,</span>
+              <a href="https://earth.google.com/web/search/{{ p.position?.latitude }},{{ p.position?.longitude }}"
+                >Google Earth</a
+              >
+              <span>)</span>
+            </div>
+            <div *ngIf="!!p.aprs">
+              Received via HAM Radio from <b>{{ p.aprs?.src }}</b>
+              <a href="https://aprs.fi/#!mt=terrain&z=15&call=a%2F{{ p.aprs?.src }}">(Track)</a>
+            </div>
+            <div *ngIf="!!p.email">
+              Received via satellite from <a href="https://share.garmin.com/jheidel" target="_blank">InReach</a>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!packets || !packets.length" class="empty">
+          No radio packets received yet.
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
@@ -97,28 +131,5 @@
         No gateways are available.
       </div>
     </mat-card-content>
-  </mat-card>
-
-  <mat-card>
-    <mat-card-content>
-      <mat-card-title>Satellite: Garmin InReach Portal</mat-card-title>
-      <mat-card-subtitle>
-        <div>
-          My InReach satellite messenger uploads data to the Garmin MapShare portal below.
-        </div>
-        <div>
-          Please note that sending messages costs money ($0.50 per message, $0.10 per location update).
-        </div>
-        <p></p>
-        <div *ngIf="secrets" class="large">
-          Enter password <b>{{ secrets.garmin }}</b> to access.
-        </div>
-      </mat-card-subtitle>
-    </mat-card-content>
-    <div class="large">
-      <a href="https://share.garmin.com/jheidel" target="_blank">
-        Open Garmin MapShare Portal
-      </a>
-    </div>
   </mat-card>
 </div>

@@ -19,6 +19,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { MarkdownModule } from 'ngx-markdown';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDjvyMSY_bfSNInv63P6vtJA4f3px1SYWE',
@@ -39,6 +40,7 @@ const firebaseConfig = {
     AngularFirestoreModule,
     HttpClientModule,
     MarkdownModule.forRoot(),
+    LeafletModule,
     BrowserAnimationsModule,
     MaterialModule,
     CoreModule,

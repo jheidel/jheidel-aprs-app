@@ -26,7 +26,8 @@
 }
 
 .module {
-  padding: 2px;
+  padding: 1px;
+  margin: 1px;
   color: white;
 }
 
@@ -75,4 +76,21 @@
   font-style: italic;
   color: #999;
   padding-bottom: 1em;
+}
+
+.map-pane {
+  display: flex;
+  width: 100%;
+}
+
+.map {
+  width: 100%;
+}
+
+.packets {
+  max-width: 500px;
+  padding-left: 1em;
+
+  overflow: auto;
+  max-height: 900px;
 }
