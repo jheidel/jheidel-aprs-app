@@ -138,7 +138,7 @@
 
       <h2>Update Itinerary</h2>
       <div>
-        <textarea cols="100" rows="40" #editor>{{ itin.text }}</textarea>
+        <textarea cols="40" rows="40" #editor>{{ itin.text }}</textarea>
         <div>
           <button matt-button (click)="onSaveEditor()">Save</button>
         </div>
@@ -148,7 +148,7 @@
 
       <h2>Post a Packet</h2>
       <div>
-        <textarea cols="80" rows="5" #packetMessage></textarea>
+        <textarea cols="40" rows="5" #packetMessage></textarea>
         <div>
           <button matt-button (click)="onPacketMessage()">Post Message</button>
         </div>
