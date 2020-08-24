@@ -33,6 +33,7 @@ interface Packet {
 }
 
 interface Secrets {
+  mapboxAccessToken: string;
   garmin: string;
 }
 
@@ -71,9 +72,14 @@ export class HomeComponent implements OnInit {
 
     this.mapOptions = {
       layers: [
-        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-          maxZoom: 17,
-          attribution: '&copy OpenTopoMap',
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+          maxZoom: 18,
+          attribution:
+            'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          id: 'mapbox/outdoors-v11',
+          tileSize: 512,
+          zoomOffset: -1,
+          accessToken: 'pk.eyJ1IjoiamhlaWRlbCIsImEiOiJja2U4MnF1a3Qxc21sMnV1bHZ1aWZ5ZXo2In0.U5PGgGIw0wmlCNcZKfbDgQ',
         }),
       ],
       zoom: 7,

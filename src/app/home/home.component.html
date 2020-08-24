@@ -6,12 +6,12 @@
         <app-loader [isLoading]="isLoading" size="1.5"></app-loader>
         <div *ngIf="itin">
           Last updated
-          {{ formatAge(now, itin.created_at) }} ago ({{ formatTime(itin.created_at) }})
+          {{ formatAge(now, itin?.created_at) }} ago ({{ formatTime(itin?.created_at) }})
         </div>
       </mat-card-subtitle>
       <div *ngIf="itin">
         <div class="itinerary">
-          <markdown [data]="itin.text"></markdown>
+          <markdown [data]="itin?.text"></markdown>
         </div>
 
         <p></p>
@@ -138,7 +138,7 @@
 
       <h2>Update Itinerary</h2>
       <div>
-        <textarea cols="40" rows="40" #editor>{{ itin.text }}</textarea>
+        <textarea cols="40" rows="40" #editor>{{ itin?.text }}</textarea>
         <div>
           <button matt-button (click)="onSaveEditor()">Save</button>
         </div>
