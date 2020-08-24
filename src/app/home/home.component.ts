@@ -19,11 +19,17 @@ interface Gateway {
   healthy_at: firebase.firestore.Timestamp;
 }
 
+interface WebPacket {
+  userAgent: string;
+}
+
 interface Packet {
   received_at: firebase.firestore.Timestamp;
   message: string;
   has_position: boolean;
   position: firebase.firestore.GeoPoint;
+  web?: WebPacket;
+  id?: string;
 }
 
 interface Secrets {
@@ -37,6 +43,7 @@ interface Secrets {
 })
 export class HomeComponent implements OnInit {
   @ViewChild('editor') editor: ElementRef;
+  @ViewChild('packetMessage') packetMessage: ElementRef;
   isLoading = false;
 
   canWrite = false;
@@ -98,7 +105,7 @@ export class HomeComponent implements OnInit {
       .collection<Packet>('packets', (ref) =>
         ref.orderBy('received_at', 'desc').where('received_at', '>', since).limit(1000)
       )
-      .valueChanges()
+      .valueChanges({ idField: 'id' })
       .subscribe((packets) => {
         this.now = firebase.firestore.Timestamp.now();
         this.packets = packets;
@@ -205,5 +212,54 @@ export class HomeComponent implements OnInit {
       created_at: firebase.firestore.Timestamp.now(),
       text: body,
     });
+  }
+
+  getPosition(): Promise<firebase.firestore.GeoPoint> {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (resp) => {
+          const pt = new firebase.firestore.GeoPoint(resp.coords.latitude, resp.coords.longitude);
+          resolve(pt);
+        },
+        (err) => {
+          reject(err);
+        }
+      );
+    });
+  }
+
+  onPacketMessage() {
+    const body = this.packetMessage.nativeElement.value.trim();
+    this.packetMessage.nativeElement.value = '';
+
+    this.getPosition()
+      .then((pos) => {
+        const packet: Packet = {
+          received_at: firebase.firestore.Timestamp.now(),
+          message: body,
+          has_position: true,
+          position: pos,
+          web: {
+            userAgent: navigator.userAgent,
+          },
+        };
+        return this.fs.collection('packets').add(packet);
+      })
+      .then((result) => {
+        alert('Post successful');
+      })
+      .catch((e) => alert('Error: ' + e.message));
+  }
+
+  onDeletePacket(e: MouseEvent) {
+    const id = (<HTMLInputElement>e.target).dataset['id'];
+    if (!confirm('Are you sure you want to delete packet "' + id + '"?')) {
+      return;
+    }
+    this.fs
+      .collection('packets')
+      .doc(id)
+      .delete()
+      .catch((e) => alert(e));
   }
 }

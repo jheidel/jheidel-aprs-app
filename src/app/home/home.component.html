@@ -25,14 +25,6 @@
             Enter password <b>{{ secrets.garmin }}</b> to access.
           </div>
         </div>
-
-        <div [hidden]="!canWrite">
-          <h4>Editor</h4>
-          <textarea cols="80" rows="10" #editor>{{ itin.text }}</textarea>
-          <div>
-            <button matt-button (click)="onSaveEditor()">Save</button>
-          </div>
-        </div>
       </div>
     </mat-card-content>
   </mat-card>
@@ -89,6 +81,13 @@
             <div *ngIf="!!p.email">
               Received via satellite from <a href="https://share.garmin.com/jheidel" target="_blank">InReach</a>
             </div>
+            <div *ngIf="!!p.web">
+              Received via the internet.
+            </div>
+
+            <div *ngIf="canWrite">
+              <button matt-button (click)="onDeletePacket($event)" [attr.data-id]="p.id">Delete</button>
+            </div>
           </div>
         </div>
         <div *ngIf="!packets || !packets.length" class="empty">
@@ -126,6 +125,33 @@
       </div>
       <div *ngIf="!gateways || !gateways.length" class="empty">
         No gateways are available.
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="!!canWrite">
+    <mat-card-content>
+      <mat-card-title>Administrator</mat-card-title>
+      <mat-card-subtitle>
+        Controls for site administration.
+      </mat-card-subtitle>
+
+      <h2>Update Itinerary</h2>
+      <div>
+        <textarea cols="100" rows="40" #editor>{{ itin.text }}</textarea>
+        <div>
+          <button matt-button (click)="onSaveEditor()">Save</button>
+        </div>
+      </div>
+
+      <p></p>
+
+      <h2>Post a Packet</h2>
+      <div>
+        <textarea cols="80" rows="5" #packetMessage></textarea>
+        <div>
+          <button matt-button (click)="onPacketMessage()">Post Message</button>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
