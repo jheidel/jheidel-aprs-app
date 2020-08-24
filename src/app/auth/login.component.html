@@ -11,14 +11,13 @@
   <div class="login-container" fxLayout="row" fxLayoutAlign="center">
     <mat-card fxFlex="90%" fxFlex.sm="66%" fxFlex.md="50%" fxFlex.gt-md="33%" class="login-box">
       <div fxLayout="column" fxLayoutAlign="center center" *ngIf="no_permissions">
-        <p>
-          Signed in as <b>{{ username }}</b
-          >, but you have no permisisons to read.
-        </p>
+        Signed in as <b>{{ username }}</b
+        >, but you have no read permissions.
         <p>
           Please contact Jeff and ask for access.
         </p>
       </div>
+
       <div *ngIf="!no_permissions">
         <form (ngSubmit)="login()" [formGroup]="loginForm" novalidate>
           <div class="login-error" [hidden]="!error || isLoading">

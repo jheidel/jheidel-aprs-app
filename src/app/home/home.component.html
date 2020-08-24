@@ -18,14 +18,11 @@
 
         <div class="itinerary">
           <div>
-            My InReach satellite messenger uploads data to the
-            <a href="https://share.garmin.com/jheidel" target="_blank"> Open Garmin MapShare Portal </a>.
+            To send satellite messages, use the
+            <a href="https://share.garmin.com/jheidel" target="_blank">Garmin MapShare Portal</a>.
           </div>
-          <div *ngIf="secrets" class="large">
+          <div *ngIf="secrets">
             Enter password <b>{{ secrets.garmin }}</b> to access.
-          </div>
-          <div>
-            Please note that sending messages costs money ($0.50 per message, $0.10 per location update).
           </div>
         </div>
 
