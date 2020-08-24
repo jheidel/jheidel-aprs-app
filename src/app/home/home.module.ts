@@ -10,6 +10,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 
 import { MarkdownModule } from 'ngx-markdown';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { MarkdownModule } from 'ngx-markdown';
     MatButtonModule,
     HomeRoutingModule,
     MarkdownModule.forChild(),
+    LeafletModule,
   ],
   declarations: [HomeComponent],
 })
