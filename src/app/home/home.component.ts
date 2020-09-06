@@ -148,11 +148,13 @@ export class HomeComponent implements OnInit {
         layers.push(route);
         this.layers = layers;
 
-        this.map.fitBounds(route.getBounds(), {
-          padding: L.point(24, 24),
-          maxZoom: 12,
-          animate: true,
-        });
+        if (coords && coords.length) {
+          this.map.fitBounds(route.getBounds(), {
+            padding: L.point(24, 24),
+            maxZoom: 12,
+            animate: true,
+          });
+        }
       });
 
     this.fs
